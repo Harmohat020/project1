@@ -1,24 +1,41 @@
 <?php
-  include_once 'database.php'; 
+  include_once 'database.php';
+  
+  $persoon = new DB("localhost","root","","project1","utf8mb4");
 
   /* Checking if the form is succesfully submitted */
   if (isset($_POST['register_form'])){
-      $voornaam = ucwords($_POST['fname']);
-      $tussenvoegsel = $_POST['tussenvoegsel'];
-      $achternaam = ucwords($_POST['lname']);
-      $username = $_POST['username'];
-      $email = $_POST['email'];
-      $pwd = $_POST['pwd'];
-      $pwd_repeat = $_POST['repeat-pwd'];
+      /* Putting the fieldnames from the form in the array*/
+      $fieldnames = array('fname', 'lname', 'username', 'email', 'pwd', 'repeat-pwd');
 
-      $persoon = new DB("localhost","root","","project1","utf8mb4");
-      
-      /* If password and repeat password are the same, data will be sended to the database */
-      if ($pwd === $pwd_repeat) {
-          $persoon->register_insert($voornaam, $tussenvoegsel, $achternaam, $email, $pwd, $username);
-      }else {
-        echo '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'.'Password is not the same' .'</div>';
+      $error = false;
+      /* Looping the fieldnames in the $_POST[] */
+      foreach ($fieldnames as $data) {
+          if(empty($_POST[$data])){
+              $error = true;
+          }    
+      }
+      /* If a fieldname is empty or password is not the same. error message will be shown */
+      if ($error OR $pwd != $pwd_repeat) {
+        if ($pwd != $pwd_repeat) {
+            echo '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'.'Password is not the same' .'</div>';
+        }else {
+            echo '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'.'All fields are required' .'</div>';
+        }  
+      }
+      /*If there is not a error, data will be inserted in the database */
+      else {
+        $voornaam = ucwords($_POST['fname']);
+        $tussenvoegsel = $_POST['tussenvoegsel'];
+        $achternaam = ucwords($_POST['lname']);
+        $username = $_POST['username'];
+        $email = $_POST['email'];
+        $pwd = $_POST['pwd'];
+        $pwd_repeat = $_POST['repeat-pwd'];
+
+        $persoon->register_insert($voornaam, $tussenvoegsel, $achternaam, $email, $pwd, $username);
       } 
+      
   }
 ?>
 <!DOCTYPE html>
@@ -52,7 +69,7 @@
             </div>
             <div class="form-group">
                 <label >Voornaam</label>
-                <input type="text" name="fname" class="form-control" required />
+                <input type="text" name="fname" class="form-control"  />
             </div>
             <div class="form-group">
                 <label >Tussenvoegsel</label>
@@ -60,23 +77,23 @@
             </div>
             <div class="form-group">
                 <label >Achternaam</label>
-                <input type="text"  name="lname" class="form-control" required/>
+                <input type="text"  name="lname" class="form-control" />
             </div>
             <div class="form-group">
                 <label>Email</label>
-                <input type="email" name="email" class="form-control" required/>
+                <input type="email" name="email" class="form-control" />
             </div>
             <div class="form-group">
                 <label>Gebruikersnaam</label>
-                <input type="text" name="username" class="form-control"  required/>
+                <input type="text" name="username" class="form-control"  />
             </div>
             <div class="form-group">
                 <label>Wachtwoord</label>
-                <input type="password" name="pwd" class="form-control" required />
+                <input type="password" name="pwd" class="form-control"  />
             </div>
             <div class="form-group">
                 <label >Herhaal Wachtwoord</label>
-                <input type="password" name="repeat-pwd" class="form-control" required />
+                <input type="password" name="repeat-pwd" class="form-control"  />
             </div>
             <div class="form-btn-submit-box">
                 <input type="submit" class="btn btn-primary btn-register" name="register_form" value="Bevestigen"/>
