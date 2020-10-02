@@ -1,0 +1,78 @@
+html, body {
+  height: 100vh;
+  background: -webkit-gradient(linear, left top, right top, from(#00b4db), to(#0083b0));
+  background: linear-gradient(to right, #00b4db, #0083b0);
+}
+
+.form {
+  background: white;
+  border-radius: 50px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  margin: 10px 5px;
+}
+
+.form-box {
+  width: 500px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  margin: 10px 5px;
+}
+
+.form-box .form-login {
+  height: 60vh;
+  width: 80%;
+}
+
+.form-box .form-register {
+  width: 80%;
+  overflow: scroll;
+  height: 500px;
+  border-radius: 0px;
+  border-top-left-radius: 50px;
+}
+
+.form-box .form-group {
+  width: 80%;
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.form-box .form-btn-submit-box {
+  text-align: center;
+}
+
+.form-box .form-btn-register {
+  text-align: center;
+}
+
+.form-box .ww-forgot {
+  font-size: 10px;
+  position: absolute;
+  left: 65%;
+}
+
+.form-box .form-title {
+  text-align: center;
+}
+
+.form-box .btn-submit {
+  width: 80%;
+  margin-top: 10%;
+}
+
+.form-box .btn-register {
+  width: 80%;
+}
+
+h1 {
+  color: #0083b0;
+}
+/*# sourceMappingURL=style.css.map */

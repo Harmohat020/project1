@@ -1,0 +1,61 @@
+@import 'variables';
+
+html,body{
+    height: 100vh;
+    background: linear-gradient(to right, #00b4db, #0083b0);
+}
+
+.form{
+    background:white;
+    border-radius: 50px;
+    @include center();
+}
+.form-box{
+    width: 500px;
+
+    @include center();
+
+    .form-login{
+        height: 60vh;
+        width: 80%;
+    }
+    .form-register{
+        width: 80%;
+        overflow: scroll;
+        height: 500px;
+        border-radius: 0px;
+        border-top-left-radius: 50px;
+    }
+    .form-group{
+        width: 80%;
+        display: block;
+        margin-right: auto;
+        margin-left: auto;
+    }
+    .form-btn-submit-box{
+        text-align: center;
+    }
+    .form-btn-register{
+        text-align: center;
+    }
+    .ww-forgot{
+        font-size: 10px;
+        position: absolute;
+        left: 65%;
+    }
+    .form-title{
+        text-align:center;
+    }
+    .btn-submit{
+        width: 80%;
+        margin-top: 10%;
+    }
+    .btn-register{
+        width: 80%;
+    }
+}
+
+h1{
+    color: #0083b0;
+}
+

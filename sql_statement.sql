@@ -1,0 +1,49 @@
+CREATE DATABASE project1;
+USE project1;
+
+CREATE TABLE account (
+    ID INT NOT NULL AUTO_INCREMENT,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    PRIMARY KEY(ID)
+);
+
+CREATE TABLE persoon (
+    ID INT NOT NULL AUTO_INCREMENT,
+    voornaam VARCHAR(255) NOT NULL,
+    tussenvoegsel VARCHAR(255),
+    achternaam VARCHAR(255) NOT NULL,
+    PRIMARY KEY(ID),
+    account_id INT NOT NULL,
+    FOREIGN KEY (account_id) REFERENCES account(ID)
+);
+
+CREATE TABLE usertype (
+    ID INT NOT NULL AUTO_INCREMENT,
+    type VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY(ID)
+);
+
+ALTER TABLE account
+        ADD gebruikersnaam VARCHAR(255) UNIQUE NOT NULL;
+
+ALTER TABLE persoon
+        ADD  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        ADD  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+
+ALTER TABLE account
+        ADD  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        ADD  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+
+ALTER TABLE account
+        ADD  usertype_id INT NOT NULL AFTER gebruikersnaam,
+        ADD FOREIGN KEY (usertype_id) REFERENCES usertype(ID);
+
+INSERT INTO usertype(ID, type)
+        VALUES
+        (NULL,'Admin'),
+        (NULL,'Docent'),
+        (NULL,'Student'),
+        (NULL,'user');
