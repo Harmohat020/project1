@@ -1,8 +1,6 @@
 <?php
   include_once 'database.php';
   
-  $persoon = new DB("localhost","root","","project1","utf8mb4");
-
   /* Checking if the form is succesfully submitted */
   if (isset($_POST['register_form'])){
       /* Putting the fieldnames from the form in the array*/
@@ -15,16 +13,14 @@
               $error = true;
           }    
       }
-      /* If a fieldname is empty or password is not the same. error message will be shown */
-      if ($error OR $pwd != $pwd_repeat) {
-        if ($pwd != $pwd_repeat) {
-            echo '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'.'Password is not the same' .'</div>';
-        }else {
-            echo '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'.'All fields are required' .'</div>';
-        }  
+      /* If a fieldname is empty error message will be shown */
+      if ($error) {  
+            echo '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'.'All fields are required' .'</div>';    
       }
       /*If there is not a error, data will be inserted in the database */
       else {
+        $persoon = new DB("localhost","root","","project1","utf8mb4");
+
         $voornaam = ucwords($_POST['fname']);
         $tussenvoegsel = $_POST['tussenvoegsel'];
         $achternaam = ucwords($_POST['lname']);
@@ -32,8 +28,14 @@
         $email = $_POST['email'];
         $pwd = $_POST['pwd'];
         $pwd_repeat = $_POST['repeat-pwd'];
+        
+            /* If password is not the same error will be shown */
+            if ($pwd != $pwd_repeat) {
+                echo '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'.'Password is not the same' .'</div>';
+            }else{
+                $persoon->register_insert($voornaam, $tussenvoegsel, $achternaam, $email, $pwd, $username);
+            }
 
-        $persoon->register_insert($voornaam, $tussenvoegsel, $achternaam, $email, $pwd, $username);
       } 
       
   }
@@ -69,7 +71,7 @@
             </div>
             <div class="form-group">
                 <label >Voornaam</label>
-                <input type="text" name="fname" class="form-control"  />
+                <input type="text" name="fname" class="form-control"  required/>
             </div>
             <div class="form-group">
                 <label >Tussenvoegsel</label>
@@ -77,23 +79,23 @@
             </div>
             <div class="form-group">
                 <label >Achternaam</label>
-                <input type="text"  name="lname" class="form-control" />
+                <input type="text"  name="lname" class="form-control" required/>
             </div>
             <div class="form-group">
                 <label>Email</label>
-                <input type="email" name="email" class="form-control" />
+                <input type="email" name="email" class="form-control" required/>
             </div>
             <div class="form-group">
                 <label>Gebruikersnaam</label>
-                <input type="text" name="username" class="form-control"  />
+                <input type="text" name="username" class="form-control" required/>
             </div>
             <div class="form-group">
                 <label>Wachtwoord</label>
-                <input type="password" name="pwd" class="form-control"  />
+                <input type="password" name="pwd" class="form-control" required/>
             </div>
             <div class="form-group">
                 <label >Herhaal Wachtwoord</label>
-                <input type="password" name="repeat-pwd" class="form-control"  />
+                <input type="password" name="repeat-pwd" class="form-control" required/>
             </div>
             <div class="form-btn-submit-box">
                 <input type="submit" class="btn btn-primary btn-register" name="register_form" value="Bevestigen"/>
