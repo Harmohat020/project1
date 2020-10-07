@@ -95,6 +95,19 @@ class DB{
                     $rowPWD = $row->password;
                 }
 
+                //whether ip is from share internet
+                if (!empty($_SERVER['HTTP_CLIENT_IP'])){
+                    $ip_address = $_SERVER['HTTP_CLIENT_IP'];
+                }
+                //whether ip is from proxy
+                elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
+                    $ip_address = $_SERVER['HTTP_X_FORWARDED_FOR'];
+                }
+                //whether ip is from remote address
+                else{
+                    $ip_address = $_SERVER['REMOTE_ADDR'];
+                }
+
                 if (count($rows) > 0) { 
 
                     $verify = password_verify($pwd, $rowPWD);
@@ -102,7 +115,7 @@ class DB{
                         if ($verify) {
                             session_start();
 
-                            error_log('✓ - Login Success: username: '.$username.' '.date("h:i:sa"). "\n", 3, 'logs/log_'.date("d-m-Y").'.log');
+                            error_log('✓ - Login Success: username: '.$username.' '.date("h:i:sa").' ['.$ip_address."]\n", 3, 'logs/log_'.date("d-m-Y").'.log');
 
                             if ($rows[0]->type === 'Admin') {
                                 $_SESSION['username'] = $username;
@@ -135,17 +148,13 @@ class DB{
                                 $message = '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'.'Invalid Username or Password' .'</div>';
                                 $_SESSION['message'] = $message;
 
-                                error_log('X - Login Failed: username: '.$username.' '.date("h:i:sa"). "\n", 3, 'logs/log_'.date("d-m-Y").'.log');
-                        }        
+                                error_log('✓ - Login Failed: username: '.$username.' '.date("h:i:sa").' ['.$ip_address."]\n", 3, 'logs/log_'.date("d-m-Y").'.log');                        }        
                 
                 }else {
                         $message = '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'.'Invalid Username or Password' .'</div>';
                         $_SESSION['message'] = $message;
 
-                        // $msg = ('X - Login Failed: username: '.$username.' '.date("Y-m-d").' '.date("h:i:sa"));
-                        // $logfile = 'logs/log_'.date("d-m-Y").'.txt';
-                        // file_put_contents($logfile, $msg . "\n", FILE_APPEND);
-                        error_log('X - Login Failed: username: '.$username.' '.date("h:i:sa"). "\n", 3, 'logs/log_'.date("d-m-Y").'.log');                     
+                        error_log('✓ - Login Failed: username: '.$username.' '.date("h:i:sa").' ['.$ip_address."]\n", 3, 'logs/log_'.date("d-m-Y").'.log');
                 } 
                               
         } 
