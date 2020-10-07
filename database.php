@@ -102,6 +102,8 @@ class DB{
                         if ($verify) {
                             session_start();
 
+                            error_log('✓ - Login Success: username: '.$username.' '.date("h:i:sa"). "\n", 3, 'logs/log_'.date("d-m-Y").'.log');
+
                             if ($rows[0]->type === 'Admin') {
                                 $_SESSION['username'] = $username;
                                 $_SESSION['password'] = $pwd;
@@ -130,13 +132,20 @@ class DB{
                                 header("Location: user/");
                             }
                         }else {
-                            $message = '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'.'Invalid Username or Password' .'</div>';
-                            $_SESSION['message'] = $message;
+                                $message = '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'.'Invalid Username or Password' .'</div>';
+                                $_SESSION['message'] = $message;
+
+                                error_log('X - Login Failed: username: '.$username.' '.date("h:i:sa"). "\n", 3, 'logs/log_'.date("d-m-Y").'.log');
                         }        
                 
                 }else {
-                     $message = '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'.'Invalid Username or Password' .'</div>';
-                     $_SESSION['message'] = $message;
+                        $message = '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'.'Invalid Username or Password' .'</div>';
+                        $_SESSION['message'] = $message;
+
+                        // $msg = ('X - Login Failed: username: '.$username.' '.date("Y-m-d").' '.date("h:i:sa"));
+                        // $logfile = 'logs/log_'.date("d-m-Y").'.txt';
+                        // file_put_contents($logfile, $msg . "\n", FILE_APPEND);
+                        error_log('X - Login Failed: username: '.$username.' '.date("h:i:sa"). "\n", 3, 'logs/log_'.date("d-m-Y").'.log');                     
                 } 
                               
         } 
