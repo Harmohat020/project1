@@ -9,13 +9,15 @@
    if (isset($_POST['login_form'])){
       /*Getting the message from database.php */
       $message = $_SESSION['message'];
-         
+      
+      /*Passing the form values into the variables */
       $username = $_POST['username'];
       $pwd = $_POST['pwd'];
       
       /* Creating instance */
       $persoon = new DB("localhost", "root", "", "project1", "utf8mb4");
-        
+      
+      /*Calling the function 'login' which contains in class DB in database.php */
       $persoon->login($username, $pwd); 
   }
 ?>

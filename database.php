@@ -40,7 +40,7 @@ class DB{
                 Prepares a statement for execution and returns a statement object */ 
                 $myQuery = $this->pdo->prepare($sql2);
                 
-                /* Executing  */
+                /* Executes the prepared statement */
                 $myQuery->execute();
                 
                 /* Getting the last inserted ID value */
@@ -52,7 +52,8 @@ class DB{
                 /*will return the same PDOStatement, without any data attached to it. 
                 Prepares a statement for execution and returns a statement object*/    
                 $myQuery = $this->pdo->prepare($sql);
-        
+                
+                /* Executes the prepared statement */
                 $myQuery->execute();
 
                 /* Commit the changes */
@@ -87,13 +88,15 @@ class DB{
                 /* will return the same PDOStatement, without any data attached to it. 
                 Prepares a statement for execution and returns a statement object*/ 
                 $myQuery = $this->pdo->prepare($sql);
-
+                
+                /* Executes the prepared statement, where i give the placholder the value of the variable $username */
                 $myQuery->execute(
                     array(
                         'username' => $username
                     )
                 );
-                
+                 
+                /*Fetching rows */
                 $rows = $myQuery->fetchAll(PDO::FETCH_OBJ);
                 
                 foreach ($rows as $row) {
@@ -119,8 +122,10 @@ class DB{
 
                         if ($verify) {
                             session_start();
-
+                            
+                            /*Logging the info to logs/ when user is logged in */
                             error_log('✓ - Login Success: username: '.$username.' '.date("h:i:sa").' ['.$ip_address."]\n", 3, 'logs/log_'.date("d-m-Y").'.log');
+                            
                             /* If usertype is Admin, person will be redirect to Dir. Admin*/
                             if ($rows[0]->type === 'Admin') {
                                 $_SESSION['username'] = $username;
@@ -161,7 +166,7 @@ class DB{
                                 $message = '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'.'Invalid Username or Password' .'</div>';
                                 $_SESSION['message'] = $message;
 
-                                error_log('✓ - Login Failed: username: '.$username.' '.date("h:i:sa").' ['.$ip_address."]\n", 3, 'logs/log_'.date("d-m-Y").'.log');                        }        
+                                error_log('X - Login Failed: username: '.$username.' '.date("h:i:sa").' ['.$ip_address."]\n", 3, 'logs/log_'.date("d-m-Y").'.log');                        }        
                 
                 }else {
                         /*If username & password are wrong, error message will be shown,
@@ -169,7 +174,7 @@ class DB{
                         $message = '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'.'Invalid Username or Password' .'</div>';
                         $_SESSION['message'] = $message;
 
-                        error_log('✓ - Login Failed: username: '.$username.' '.date("h:i:sa").' ['.$ip_address."]\n", 3, 'logs/log_'.date("d-m-Y").'.log');
+                        error_log('X - Login Failed: username: '.$username.' '.date("h:i:sa").' ['.$ip_address."]\n", 3, 'logs/log_'.date("d-m-Y").'.log');
                 } 
                               
         } 
@@ -178,6 +183,8 @@ class DB{
         }    
 
     }
+    
+    /*Function for Admin to show overview of all users */
     public function getAllUsers(){
         try {
                 /* Begin a transaction, turning off autocommit*/
@@ -194,9 +201,11 @@ class DB{
                 /* will return the same PDOStatement, without any data attached to it.
                 Prepares a statement for execution and returns a statement object */ 
                 $myQuery = $this->pdo->prepare($sql);
-
+                
+                /* Executes the prepared statement */
                 $myQuery->execute();
-
+                
+                /*Fetching rows */
                 $row = $myQuery->fetchAll();
 
                 if (count($row) > 0) {
@@ -217,7 +226,8 @@ class DB{
           try {
                   /* Begin a transaction, turning off autocommit */
                   $this->pdo->beginTransaction();
-
+                  
+                  /*Hashing the password which coms from  sign.php */
                   $pwd = password_hash($pwd, PASSWORD_DEFAULT);  
   
                   $sql2 = "INSERT INTO account(ID, email, password, gebruikersnaam, usertype_id)
@@ -227,7 +237,7 @@ class DB{
                    Prepares a statement for execution and returns a statement object */ 
                   $myQuery = $this->pdo->prepare($sql2);
                   
-                  /* Execute de query */
+                  /* Executes the prepared statement */
                   $myQuery->execute();
                   
                   /* Getting the last inserted ID value */
@@ -239,7 +249,8 @@ class DB{
                   /* will return the same PDOStatement, without any data attached to it. 
                   Prepares a statement for execution and returns a statement object */
                   $myQuery = $this->pdo->prepare($sql);
-          
+                  
+                  /* Executes the prepared statement */
                   $myQuery->execute();
   
                   /* Commit the changes */

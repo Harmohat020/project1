@@ -1,11 +1,4 @@
-X - Login Failed: username: test 01:18:42pm
-✓ - Login Success: username: Harmohat@admin 01:20:17pm ::1
-✓ - Login Success: username: Harmohat@admin 01:21:37pm ::1
-✓ - Login Success: username: Harmohat@admin 01:22:18pm [::1]
-✓ - Login Failed: username: ddhh 01:23:04pm [::1]
-✓ - Login Failed: username: ddhh 01:23:44pm [::1]
-✓ - Login Failed: username: dhdhh 01:24:39pm [::1]
-✓ - Login Failed: username: dhdh 01:25:06pm [::1]
-✓ - Login Failed: username: avb 01:25:16pm [::1]
-✓ - Login Failed: username: avb 01:30:15pm [::1]
-✓ - Login Failed: username: ddh 01:30:23pm [::1]
+X - Login Failed: username: djdh 01:51:51pm [::1]
+X - Login Failed: username: dhd 01:51:53pm [::1]
+X - Login Failed: username: JohnDoe 01:51:57pm [::1]
+✓ - Login Success: username: JohnDoe 01:52:02pm [::1]
