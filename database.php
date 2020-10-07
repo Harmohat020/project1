@@ -35,7 +35,9 @@ class DB{
 
                 $sql2 = "INSERT INTO account(ID, email, password, gebruikersnaam, usertype_id)
                 VALUES(NULL, '$email', '$pwd', '$username', 3);";
-
+                
+                /*will return the same PDOStatement, without any data attached to it. 
+                Prepares a statement for execution and returns a statement object */ 
                 $myQuery = $this->pdo->prepare($sql2);
                 
                 /* Executing  */
@@ -46,7 +48,9 @@ class DB{
                 
                 $sql = "INSERT INTO persoon(ID, voornaam, tussenvoegsel, achternaam, account_id)
                 VALUES(NULL, '$voornaam', '$tussenvoegsel', '$achternaam', '$ID');";
-                    
+                
+                /*will return the same PDOStatement, without any data attached to it. 
+                Prepares a statement for execution and returns a statement object*/    
                 $myQuery = $this->pdo->prepare($sql);
         
                 $myQuery->execute();
@@ -80,7 +84,8 @@ class DB{
                 ON account.usertype_id = usertype.ID
                 WHERE gebruikersnaam = :username ";
             
-                /*  Preparing  object */
+                /* will return the same PDOStatement, without any data attached to it. 
+                Prepares a statement for execution and returns a statement object*/ 
                 $myQuery = $this->pdo->prepare($sql);
 
                 $myQuery->execute(
@@ -95,15 +100,15 @@ class DB{
                     $rowPWD = $row->password;
                 }
 
-                //whether ip is from share internet
+                /* whether ip is from share internet */
                 if (!empty($_SERVER['HTTP_CLIENT_IP'])){
                     $ip_address = $_SERVER['HTTP_CLIENT_IP'];
                 }
-                //whether ip is from proxy
+                /* whether ip is from proxy */
                 elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
                     $ip_address = $_SERVER['HTTP_X_FORWARDED_FOR'];
                 }
-                //whether ip is from remote address
+                /* whether ip is from remote address */
                 else{
                     $ip_address = $_SERVER['REMOTE_ADDR'];
                 }
@@ -116,7 +121,7 @@ class DB{
                             session_start();
 
                             error_log('✓ - Login Success: username: '.$username.' '.date("h:i:sa").' ['.$ip_address."]\n", 3, 'logs/log_'.date("d-m-Y").'.log');
-
+                            /* If usertype is Admin, person will be redirect to Dir. Admin*/
                             if ($rows[0]->type === 'Admin') {
                                 $_SESSION['username'] = $username;
                                 $_SESSION['password'] = $pwd;
@@ -124,33 +129,43 @@ class DB{
                                 $_SESSION['type'] = $rows[0]->type;
     
                                 header("Location: admin/"); 
-                            }elseif($rows[0]->type === 'Docent'){                        
+                            }
+                            /* If usertype is Docent, person will be redirect to Dir. Docent*/
+                            elseif($rows[0]->type === 'Docent'){                        
                                 $_SESSION['username'] = $username;
                                 $_SESSION['password'] = $pwd;
                                 $_SESSION['row'] = $rows;
                                 $_SESSION['type'] = $rows[0]->type;
 
                                 header("Location: docent/"); 
-                            }elseif($rows[0]->type === 'Student'){
+                            }
+                            /* If usertype is Student, person will be redirect to Dir. Student*/
+                            elseif($rows[0]->type === 'Student'){
                                 $_SESSION['username'] = $username;
                                 $_SESSION['password'] = $pwd;
                                 $_SESSION['row'] = $rows;
                                 $_SESSION['type'] = $rows[0]->type;
 
                                 header("Location: student/"); 
-                            }else{
+                            }
+                             /* If usertype is User, person will be redirect to Dir. User*/
+                            else{
                                 $_SESSION['username'] = $username;
                                 $_SESSION['type'] = $rows[0]->type;
 
                                 header("Location: user/");
                             }
                         }else {
+                                /*If username is right but pasword is wrong, error message will be shown,
+                                and message will be logged to logs/ */
                                 $message = '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'.'Invalid Username or Password' .'</div>';
                                 $_SESSION['message'] = $message;
 
                                 error_log('✓ - Login Failed: username: '.$username.' '.date("h:i:sa").' ['.$ip_address."]\n", 3, 'logs/log_'.date("d-m-Y").'.log');                        }        
                 
                 }else {
+                        /*If username & password are wrong, error message will be shown,
+                        and message will be logged to logs/ */
                         $message = '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'.'Invalid Username or Password' .'</div>';
                         $_SESSION['message'] = $message;
 
@@ -165,7 +180,7 @@ class DB{
     }
     public function getAllUsers(){
         try {
-                /* Begin a transaction, turning off autocommit */
+                /* Begin a transaction, turning off autocommit*/
                 $this->pdo->beginTransaction();
                 
                 $sql = "SELECT account.ID,voornaam, tussenvoegsel, achternaam, email, gebruikersnaam, type
@@ -175,7 +190,9 @@ class DB{
                 JOIN usertype
                 ON account.usertype_id = usertype.ID;
                 ";
-
+                
+                /* will return the same PDOStatement, without any data attached to it.
+                Prepares a statement for execution and returns a statement object */ 
                 $myQuery = $this->pdo->prepare($sql);
 
                 $myQuery->execute();
@@ -205,7 +222,9 @@ class DB{
   
                   $sql2 = "INSERT INTO account(ID, email, password, gebruikersnaam, usertype_id)
                   VALUES(NULL, '$email', '$pwd', '$gebruikersnaam', '$type');";
-  
+                  
+                  /* will return the same PDOStatement, without any data attached to it. 
+                   Prepares a statement for execution and returns a statement object */ 
                   $myQuery = $this->pdo->prepare($sql2);
                   
                   /* Execute de query */
@@ -216,7 +235,9 @@ class DB{
                   
                   $sql = "INSERT INTO persoon(ID, voornaam, tussenvoegsel, achternaam, account_id)
                   VALUES(NULL, '$voornaam', '$tussenvoegsel', '$achternaam', '$ID');";
-                      
+                  
+                  /* will return the same PDOStatement, without any data attached to it. 
+                  Prepares a statement for execution and returns a statement object */
                   $myQuery = $this->pdo->prepare($sql);
           
                   $myQuery->execute();
