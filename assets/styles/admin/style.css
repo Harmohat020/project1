@@ -1,3 +1,11 @@
+table#overzicht {
+  width: 100%;
+}
+
+table#overzicht tr:hover {
+  background-color: #dee2e6;
+}
+
 .welcome-msg {
   text-align: center;
 }

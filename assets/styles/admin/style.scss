@@ -1,5 +1,11 @@
-@import '../users/variables';
-
+table#overzicht{
+    width: 100%;
+    tr{
+        &:hover{
+            background-color:#dee2e6;
+        }
+    }
+}
 .welcome-msg{
     text-align: center;
 }

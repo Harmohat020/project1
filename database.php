@@ -33,8 +33,8 @@ class DB{
                 
                 $pwd = password_hash($pwd, PASSWORD_DEFAULT);  
 
-                $sql2 = "INSERT INTO account(account_id, email, password, gebruikersnaam, usertype_id)
-                VALUES(NULL, '$email', '$pwd', '$username', 4);";
+                $sql2 = "INSERT INTO account(ID, email, password, gebruikersnaam, usertype_id)
+                VALUES(NULL, '$email', '$pwd', '$username', 3);";
 
                 $myQuery = $this->pdo->prepare($sql2);
                 
@@ -44,7 +44,7 @@ class DB{
                 /* Getting the last inserted ID value */
                 $ID = $this->pdo->lastInsertId();
                 
-                $sql = "INSERT INTO persoon(persoon_id, voornaam, tussenvoegsel, achternaam, account_id)
+                $sql = "INSERT INTO persoon(ID, voornaam, tussenvoegsel, achternaam, account_id)
                 VALUES(NULL, '$voornaam', '$tussenvoegsel', '$achternaam', '$ID');";
                     
                 $myQuery = $this->pdo->prepare($sql);
@@ -75,9 +75,9 @@ class DB{
                 $sql = "SELECT voornaam, tussenvoegsel, achternaam, email, gebruikersnaam, password, type
                 FROM persoon
                 INNER JOIN account
-                ON persoon.account_id = account.account_id
+                ON persoon.account_id = account.ID
                 JOIN usertype
-                ON account.usertype_id = usertype.usertype_id
+                ON account.usertype_id = usertype.ID
                 WHERE gebruikersnaam = :username ";
             
                 /*  Preparing  object */
@@ -138,9 +138,7 @@ class DB{
                      $message = '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'.'Invalid Username or Password' .'</div>';
                      $_SESSION['message'] = $message;
                 } 
-                /* Commit the changes */
-                $this->pdo->commit();                    
-
+                              
         } 
         catch (PDOException $e) { 
             throw $e;
@@ -152,12 +150,12 @@ class DB{
                 /* Begin a transaction, turning off autocommit */
                 $this->pdo->beginTransaction();
                 
-                $sql = "SELECT voornaam, tussenvoegsel, achternaam, email, gebruikersnaam, type
+                $sql = "SELECT account.ID,voornaam, tussenvoegsel, achternaam, email, gebruikersnaam, type
                 FROM persoon
                 INNER JOIN account
-                ON persoon.account_id = account.account_id
+                ON persoon.account_id = account.ID
                 JOIN usertype
-                ON account.usertype_id = usertype.usertype_id;
+                ON account.usertype_id = usertype.ID;
                 ";
 
                 $myQuery = $this->pdo->prepare($sql);
@@ -187,7 +185,7 @@ class DB{
 
                   $pwd = password_hash($pwd, PASSWORD_DEFAULT);  
   
-                  $sql2 = "INSERT INTO account(account_id, email, password, gebruikersnaam, usertype_id)
+                  $sql2 = "INSERT INTO account(ID, email, password, gebruikersnaam, usertype_id)
                   VALUES(NULL, '$email', '$pwd', '$gebruikersnaam', '$type');";
   
                   $myQuery = $this->pdo->prepare($sql2);
@@ -198,7 +196,7 @@ class DB{
                   /* Getting the last inserted ID value */
                   $ID = $this->pdo->lastInsertId();
                   
-                  $sql = "INSERT INTO persoon(persoon_id, voornaam, tussenvoegsel, achternaam, account_id)
+                  $sql = "INSERT INTO persoon(ID, voornaam, tussenvoegsel, achternaam, account_id)
                   VALUES(NULL, '$voornaam', '$tussenvoegsel', '$achternaam', '$ID');";
                       
                   $myQuery = $this->pdo->prepare($sql);

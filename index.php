@@ -2,15 +2,18 @@
  session_start();
  
  include_once 'database.php';
-
+ 
+ /*Setting var $message empty */
  $message = "";
   
    if (isset($_POST['login_form'])){
+      /*Getting the message from database.php */
       $message = $_SESSION['message'];
          
       $username = $_POST['username'];
       $pwd = $_POST['pwd'];
-
+      
+      /* Creating instance */
       $persoon = new DB("localhost", "root", "", "project1", "utf8mb4");
         
       $persoon->login($username, $pwd); 
