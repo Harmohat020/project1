@@ -27,40 +27,76 @@ class DB{
     }
 
     public function register_insert($voornaam, $tussenvoegsel, $achternaam, $email, $pwd, $username){ 
-        try {   
+        try {  
                 /* Begin a transaction, turning off autocommit */
                 $this->pdo->beginTransaction();
-                
-                $pwd = password_hash($pwd, PASSWORD_DEFAULT);  
 
-                $sql2 = "INSERT INTO account(ID, email, password, gebruikersnaam, usertype_id)
-                VALUES(NULL, '$email', '$pwd', '$username', 3);";
-                
-                /*will return the same PDOStatement, without any data attached to it. 
-                Prepares a statement for execution and returns a statement object */ 
-                $myQuery = $this->pdo->prepare($sql2);
-                
-                /* Executes the prepared statement */
-                $myQuery->execute();
-                
-                /* Getting the last inserted ID value */
-                $ID = $this->pdo->lastInsertId();
-                
-                $sql = "INSERT INTO persoon(ID, voornaam, tussenvoegsel, achternaam, account_id)
-                VALUES(NULL, '$voornaam', '$tussenvoegsel', '$achternaam', '$ID');";
-                
-                /*will return the same PDOStatement, without any data attached to it. 
-                Prepares a statement for execution and returns a statement object*/    
-                $myQuery = $this->pdo->prepare($sql);
-                
-                /* Executes the prepared statement */
-                $myQuery->execute();
+                //username & email check if exists
+                $sqlCheckUser = "SELECT email, gebruikersnaam FROM account";
 
-                /* Commit the changes */
-                $this->pdo->commit();
-                                
-                /* Prevents that data is always added to the table during refresh */
-                header("Location: index.php");
+                $queryCheckUser = $this->pdo->prepare($sqlCheckUser);
+
+                $queryCheckUser->execute();
+
+                // is an associative array 
+                $resultCheckUser = $queryCheckUser->fetchAll(PDO::FETCH_OBJ);
+                
+                $emailChecker = [];
+                $usernameChecker  = [];
+
+                foreach ($resultCheckUser as $checkUser) {
+                    array_push($emailChecker, $checkUser->email);
+                    array_push($usernameChecker, $checkUser->gebruikersnaam);
+                }
+                
+                /* Check if Email and Username already exists in database */
+                if (in_array($email, $emailChecker) AND in_array($username, $usernameChecker)) {
+                    echo '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'.'Email & Username Already Exists' .'</div>';    
+                }
+                /* Check if Email already exists in database */
+                elseif(in_array($email, $emailChecker)) {
+                    echo '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'.'Email Already Exists' .'</div>';    
+                }
+                /* Check if Username already exists in database */
+                elseif(in_array($username, $usernameChecker)){
+                    echo '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'.'Username Already exists' .'</div>';    
+                }
+                /* If Email and Username doesn't exists in database, data will be put into the database*/
+                else{
+                    $pwd = password_hash($pwd, PASSWORD_DEFAULT);  
+
+                    $sql = "INSERT INTO account(ID, email, password, gebruikersnaam, usertype_id)
+                    VALUES(NULL, '$email', '$pwd', '$username', 3);";
+                    
+                    /*will return the same PDOStatement, without any data attached to it. 
+                    Prepares a statement for execution and returns a statement object */ 
+                    $myQuery = $this->pdo->prepare($sql);
+                    
+                    /* Executes the prepared statement */
+                    $myQuery->execute();
+                    
+                    /* Getting the last inserted ID value */
+                    $ID = $this->pdo->lastInsertId();
+                    
+                    $sql2 = "INSERT INTO persoon(ID, voornaam, tussenvoegsel, achternaam, account_id)
+                    VALUES(NULL, '$voornaam', '$tussenvoegsel', '$achternaam', '$ID');";
+                    
+                    /*will return the same PDOStatement, without any data attached to it. 
+                    Prepares a statement for execution and returns a statement object*/    
+                    $myQuery = $this->pdo->prepare($sql2);
+                    
+                    /* Executes the prepared statement */
+                    $myQuery->execute();
+    
+                    /* Commit the changes */
+                    $this->pdo->commit();
+
+                    error_log('✓ - Registration Success: username: '.$username.' '.date("h:i:sa").' ['.$ip_address."]\n", 3, 'logs/register/log_'.date("d-m-Y").'.log');
+                                    
+                    /* Prevents that data is always added to the table during refresh */
+                    header("Location: index.php");
+                }
+                
         } 
         catch (PDOException $e) {
             /* Recognize mistake and roll back changes */
@@ -124,7 +160,7 @@ class DB{
                             session_start();
                             
                             /*Logging the info to logs/ when user is logged in */
-                            error_log('✓ - Login Success: username: '.$username.' '.date("h:i:sa").' ['.$ip_address."]\n", 3, 'logs/log_'.date("d-m-Y").'.log');
+                            error_log('✓ - Login Success: username: '.$username.' '.date("h:i:sa").' ['.$ip_address."]\n", 3, 'logs/login/log_'.date("d-m-Y").'.log');
                             
                             /* If usertype is Admin, person will be redirect to Dir. Admin*/
                             if ($rows[0]->type === 'Admin') {
@@ -166,7 +202,7 @@ class DB{
                                 $message = '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'.'Invalid Username or Password' .'</div>';
                                 $_SESSION['message'] = $message;
 
-                                error_log('X - Login Failed: username: '.$username.' '.date("h:i:sa").' ['.$ip_address."]\n", 3, 'logs/log_'.date("d-m-Y").'.log');                        }        
+                                error_log('X - Login Failed: username: '.$username.' '.date("h:i:sa").' ['.$ip_address."]\n", 3, 'logs/login/log_'.date("d-m-Y").'.log');                        }        
                 
                 }else {
                         /*If username & password are wrong, error message will be shown,
@@ -174,7 +210,7 @@ class DB{
                         $message = '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'.'Invalid Username or Password' .'</div>';
                         $_SESSION['message'] = $message;
 
-                        error_log('X - Login Failed: username: '.$username.' '.date("h:i:sa").' ['.$ip_address."]\n", 3, 'logs/log_'.date("d-m-Y").'.log');
+                        error_log('X - Login Failed: username: '.$username.' '.date("h:i:sa").' ['.$ip_address."]\n", 3, 'logs/login/log_'.date("d-m-Y").'.log');
                 } 
                               
         } 
@@ -267,6 +303,78 @@ class DB{
           }
        
     }
+    public function show($id){
+        $sql = "SELECT account.ID,account.usertype_id AS typeID, voornaam, tussenvoegsel, achternaam, email, gebruikersnaam, type
+        FROM persoon
+        INNER JOIN account
+        ON persoon.account_id = account.ID
+        JOIN usertype
+        ON account.usertype_id = usertype.ID
+        WHERE account.id = :id";
+
+      
+        $myQuery = $this->pdo->prepare($sql);
+
+        $myQuery->execute([
+            'id' => $id
+        ]);
+
+        $user = $myQuery->fetch(PDO::FETCH_ASSOC);
+
+        $this->voornaam =  $user['voornaam'];
+        $this->tussenvoegsel =  $user['tussenvoegsel'];
+        $this->achternaam =  $user['achternaam'];
+        $this->email =  $user['email'];
+        $this->gebruikersnaam =  $user['gebruikersnaam'];
+        $this->type =  $user['type'];
+        $this->typeID =  $user['typeID'];
+
+    }
+    public function edit($voornaam, $tussenvoegsel, $achternaam, $email, $username, $typeID, $id){
+        try {
+            /* Begin a transaction, turning off autocommit */
+            $this->pdo->beginTransaction();
+
+            $sql = "UPDATE account SET email = :email, gebruikersnaam = :gebruikersnaam, usertype_id = :typeID  WHERE ID = :id;";
+            
+            /*will return the same PDOStatement, without any data attached to it. 
+            Prepares a statement for execution and returns a statement object */ 
+            $myQuery = $this->pdo->prepare($sql);
+            
+            /* Executes the prepared statement */
+            $myQuery->execute([
+                'email' => $email,
+                'gebruikersnaam' => $username,
+                'usertype_id' => $typeID,
+                'id' => $id
+            ]);
+
+            $sql2 = "UPDATE persoon SET voornaam = :voornaam, tussenvoegsel = :tussenvoegsel, achternaam = :achternaam  WHERE ID = :id;";
+
+            /*will return the same PDOStatement, without any data attached to it. 
+            Prepares a statement for execution and returns a statement object */ 
+            $myQuery = $this->pdo->prepare($sql2);
+
+            /* Executes the prepared statement */
+            $myQuery->execute([
+                'voornaam' => $voornaam,
+                'tussenvoegsel' => $tussenvoegsel,
+                'achternaam' => $achternaam,
+                'id' => $id
+            ]);
+               
+            /* Commit the changes */
+            $this->pdo->commit();
+
+        }catch (PDOException $e) {
+            /* Recognize mistake and roll back changes */
+            $this->pdo->rollback();
+            
+            throw $e;
+        }
+    }
+       
+    
 
 
 }

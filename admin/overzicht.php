@@ -7,7 +7,7 @@ $type = $_SESSION['type'];
 
 if (isset($_SESSION['username']) AND $type === 'Admin'){
 
-    $overzicht = new DB("localhost","root","","project1","utf8mb4");
+    $overzicht = new DB('localhost','root','','project1','utf8mb4');
     $overzicht->getAllUsers();
 
     $row = $_SESSION['admin_row'];
@@ -77,26 +77,32 @@ if (isset($_SESSION['username']) AND $type === 'Admin'){
                     <th scope="col">email</th>
                     <th scope="col">Gebruikersnaam</th>
                     <th scope="col">Functie</th>
+                    <th scope="col">Toon</th>
                     <th scope="col">Edit</th>
                     <th scope="col">Verwijder</th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($row as $array): ?>
+                <?php foreach ($row as $user): ?>
                 <tr>
-                    <td><?php echo $array['ID'];?></td>
-                    <td><?php echo $array['voornaam'];?></td>
-                    <td><?php echo $array['tussenvoegsel'];?></td>
-                    <td><?php echo $array['achternaam'];?></td> 
-                    <td><?php echo $array['email'];?></td> 
-                    <td><?php echo $array['gebruikersnaam'];?></td> 
-                    <td><?php echo $array['type'];?></td>  
-                    <td class="noExl">
-                        <a class="btn btn-primary mr-2 btn-sm" href="edit.php">Edit</a>
-                    </td>      
-                    <td class="noExl">
-                        <input class="btn btn-danger btn-sm" type="submit" value="Verwijderen">
-                    </td> 
+                    <td><?php echo $userID = $user['ID'];?></td>
+                    <td><?php echo $user['voornaam'];?></td>
+                    <td><?php echo $user['tussenvoegsel'];?></td>
+                    <td><?php echo $user['achternaam'];?></td> 
+                    <td><?php echo $user['email'];?></td> 
+                    <td><?php echo $user['gebruikersnaam'];?></td> 
+                    <td><?php echo $user['type'];?></td>
+                    <form action="overzicht.php"  method="POST">  
+                        <td class="noExl">
+                            <a class="btn btn-secondary mr-2 btn-sm" href="show.php?id=<?php echo $userID; ?>">Toon</a>
+                        </td>
+                        <td class="noExl">
+                            <a class="btn btn-primary mr-2 btn-sm" href="edit.php?id=<?php echo $userID; ?>">Edit</a>
+                        </td>      
+                        <td class="noExl">
+                            <input class="btn btn-danger btn-sm" type="submit" value="Verwijderen">
+                        </td> 
+                    </form>
                 </tr> 
                 <?php endforeach; ?>
             </tbody>

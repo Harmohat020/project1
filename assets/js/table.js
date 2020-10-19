@@ -6,7 +6,13 @@ $(document).ready(function() {
           "sInfo": "Showing _START_ to _END_ of _TOTAL_ records",
         },
         dom: 'lBfrtip', 
-        buttons: ['columnsToggle'],
+        // buttons: ['columnsToggle'],
+        buttons: [ {
+          extend: 'colvis',
+          columnText: function ( dt, idx, title ) {
+              return (idx+1)+': '+title;
+          }
+        } ],
         aLengthMenu: [
           [10, 25, 50, 100, 150, -1],
           [10, 25, 50, 100, 150, "All"]

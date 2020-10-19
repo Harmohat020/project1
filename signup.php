@@ -15,11 +15,14 @@
       }
       /* If a fieldname is empty error message will be shown */
       if ($error) {  
-            echo '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'.'All fields are required' .'</div>';    
+            echo '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'.'All fields are required' .'</div>'; 
+            
+            error_log('X - Registration Failed: username: '.$username.' '.date("h:i:sa").' ['.$ip_address."]\n", 3, 'logs/register/log_'.date("d-m-Y").'.log');
+
       }
       /*If there is not a error, data will be inserted in the database */
       else {
-        $persoon = new DB("localhost","root","","project1","utf8mb4");
+        $persoon = new DB('localhost','root','','project1','utf8mb4');
 
         $voornaam = ucwords($_POST['fname']);
         $tussenvoegsel = $_POST['tussenvoegsel'];
@@ -32,6 +35,9 @@
             /* If password is not the same error will be shown */
             if ($pwd != $pwd_repeat) {
                 echo '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'.'Password is not the same' .'</div>';
+
+                error_log('X - Registration Failed: username: '.$username.' email: '.$email.' '.date("h:i:sa").' ['.$ip_address."]\n", 3, 'logs/register/log_'.date("d-m-Y").'.log');
+
             }else{
                 $persoon->register_insert($voornaam, $tussenvoegsel, $achternaam, $email, $pwd, $username);
             }
