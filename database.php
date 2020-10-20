@@ -66,7 +66,7 @@ class DB{
                     $pwd = password_hash($pwd, PASSWORD_DEFAULT);  
 
                     $sql = "INSERT INTO account(ID, email, password, gebruikersnaam, usertype_id)
-                    VALUES(NULL, '$email', '$pwd', '$username', 3);";
+                    VALUES(NULL, '$email', '$pwd', '$username', 4);";
                     
                     /*will return the same PDOStatement, without any data attached to it. 
                     Prepares a statement for execution and returns a statement object */ 
@@ -258,51 +258,6 @@ class DB{
         
     }
 
-    public function create_person_admin($voornaam, $tussenvoegsel, $achternaam, $email, $pwd, $gebruikersnaam, $type){
-          try {
-                  /* Begin a transaction, turning off autocommit */
-                  $this->pdo->beginTransaction();
-                  
-                  /*Hashing the password which coms from  sign.php */
-                  $pwd = password_hash($pwd, PASSWORD_DEFAULT);  
-  
-                  $sql2 = "INSERT INTO account(ID, email, password, gebruikersnaam, usertype_id)
-                  VALUES(NULL, '$email', '$pwd', '$gebruikersnaam', '$type');";
-                  
-                  /* will return the same PDOStatement, without any data attached to it. 
-                   Prepares a statement for execution and returns a statement object */ 
-                  $myQuery = $this->pdo->prepare($sql2);
-                  
-                  /* Executes the prepared statement */
-                  $myQuery->execute();
-                  
-                  /* Getting the last inserted ID value */
-                  $ID = $this->pdo->lastInsertId();
-                  
-                  $sql = "INSERT INTO persoon(ID, voornaam, tussenvoegsel, achternaam, account_id)
-                  VALUES(NULL, '$voornaam', '$tussenvoegsel', '$achternaam', '$ID');";
-                  
-                  /* will return the same PDOStatement, without any data attached to it. 
-                  Prepares a statement for execution and returns a statement object */
-                  $myQuery = $this->pdo->prepare($sql);
-                  
-                  /* Executes the prepared statement */
-                  $myQuery->execute();
-  
-                  /* Commit the changes */
-                  $this->pdo->commit();
-                                  
-                  /* Prevents that data is always added to the table during refresh */
-                  header("Location: create.php");
-          } 
-          catch (PDOException $e) {
-              /* Recognize mistake and roll back changes */
-              $this->pdo->rollback();
-              
-              throw $e;
-          }
-       
-    }
     public function show($id){
         $sql = "SELECT account.ID,account.usertype_id AS typeID, voornaam, tussenvoegsel, achternaam, email, gebruikersnaam, type
         FROM persoon
@@ -330,12 +285,12 @@ class DB{
         $this->typeID =  $user['typeID'];
 
     }
-    public function edit($voornaam, $tussenvoegsel, $achternaam, $email, $username, $typeID, $id){
+    public function edit($voornaam, $tussenvoegsel, $achternaam, $email, $username, $typeID){
         try {
             /* Begin a transaction, turning off autocommit */
             $this->pdo->beginTransaction();
 
-            $sql = "UPDATE account SET email = :email, gebruikersnaam = :gebruikersnaam, usertype_id = :typeID  WHERE ID = :id;";
+            $sql = "UPDATE account INNER JOIN persoon ON persoon.account_id = account.ID set email = :email, gebruikersnaam = :gebruikersnaam, usertype_id = :typeID, voornaam = :voornaam, tussenvoegsel = :tussenvoegsel, achternaam = :achternaam  WHERE account.id = :id;";
             
             /*will return the same PDOStatement, without any data attached to it. 
             Prepares a statement for execution and returns a statement object */ 
@@ -345,26 +300,19 @@ class DB{
             $myQuery->execute([
                 'email' => $email,
                 'gebruikersnaam' => $username,
-                'usertype_id' => $typeID,
-                'id' => $id
-            ]);
-
-            $sql2 = "UPDATE persoon SET voornaam = :voornaam, tussenvoegsel = :tussenvoegsel, achternaam = :achternaam  WHERE ID = :id;";
-
-            /*will return the same PDOStatement, without any data attached to it. 
-            Prepares a statement for execution and returns a statement object */ 
-            $myQuery = $this->pdo->prepare($sql2);
-
-            /* Executes the prepared statement */
-            $myQuery->execute([
+                'typeID' => $typeID,
                 'voornaam' => $voornaam,
                 'tussenvoegsel' => $tussenvoegsel,
                 'achternaam' => $achternaam,
-                'id' => $id
+                'id' => $_GET['id']
             ]);
-               
+     
             /* Commit the changes */
             $this->pdo->commit();
+
+            header('Location: overzicht.php');
+
+            exit;
 
         }catch (PDOException $e) {
             /* Recognize mistake and roll back changes */
@@ -373,9 +321,35 @@ class DB{
             throw $e;
         }
     }
-       
+    public function destroy(){
+        try {
+            /* Begin a transaction, turning off autocommit */
+            $this->pdo->beginTransaction();
+
+            $sql = "DELETE FROM persoon USING persoon INNER JOIN account on  persoon.account_id = account.ID WHERE account.id = :id;";
+        
+            /*will return the same PDOStatement, without any data attached to it. 
+            Prepares a statement for execution and returns a statement object */ 
+            $myQuery = $this->pdo->prepare($sql);
     
+            /* Executes the prepared statement */
+            $myQuery->execute([
+                'id' => $_GET['id']
+            ]);
 
+            /* Commit the changes */
+            $this->pdo->commit(); 
 
+            header('Location: overzicht.php');
+
+            exit;
+
+        }catch (PDOException $e) {
+            /* Recognize mistake and roll back changes */
+            $this->pdo->rollback();
+            
+            throw $e;
+        }
+    }
 }
 ?>

@@ -26,81 +26,82 @@ if (isset($_SESSION['username']) AND $type === 'Admin'){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Show</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    
+    <!--Tailwind -->
+    <link rel="stylesheet" href="../assets/styles/src/tailwind/style.css">
 </head>
 <body>
-    <div class="py-12">
+  <main>
+    <div class="py-12 p-6 sm:px-20">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg"> 
-                 <div class="card"> 
-                    <div class="card-body">              
-                         <div class="row">
-                            <div class="col-lg-12 margin-tb">
-                                <div class="pull-left mt-3">
-                                    <h1>User details</h1>
-                                </div>
-                                <br>
-                                <div class="row">
-                                    <div class="col">
-                                        <p class="font-weight-bold">Voornaam</p>
-                                    </div>
-                                    <div class="col">
-                                         <?php echo $user->voornaam;?>
-                                    </div>
-                                    <div class="col-9"></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                    <p class="font-weight-bold">Tussenvoegsel:</p>
-                                    </div>
-                                    <div class="col">
-                                         <?php echo $user->tussenvoegsel;?>
-                                    </div>
-                                    <div class="col-9"></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                    <p class="font-weight-bold">Achternaam:</p>
-                                    </div>
-                                    <div class="col">
-                                         <?php echo $user->achternaam;?>
-                                    </div>
-                                    <div class="col-9"></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                    <p class="font-weight-bold">Email:</p>
-                                    </div>
-                                    <div class="col">
-                                         <?php echo $user->email;?>
-                                    </div>  
-                                    <div class="col-9"></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                    <p class="font-weight-bold">Gebruikersnaam:</p>
-                                    </div>
-                                    <div class="col">
-                                         <?php echo $user->gebruikersnaam;?>
-                                    </div>
-                                    <div class="col-9"></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                    <p class="font-weight-bold">Type:</p>
-                                    </div>
-                                    <div class="col">
-                                         <?php echo $user->type;?>
-                                    </div>
-                                    <div class="col-9"></div>
-                                </div>
-                                <div class="pull-right mt-3 mb-3">
-                                    <a class="btn btn-primary" href="overzicht.php">Terug</a>
-                                </div>
-                            </div>
-                    </div>
-                </div>
+            <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+            <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">
+                User Informatie
+                </h3>
+                <p class="mt-1 max-w-2xl text-sm leading-5 text-gray-500">
+                Persoonlijke details
+                </p>
             </div>
+            <div>
+                <dl>
+                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 hover:bg-gray-200">
+                    <dt class="text-sm leading-5 font-medium text-black-500">
+                    Voornaam
+                    </dt>
+                    <dd class="mt-1 text-sm leading-5 text-gray-500 sm:mt-0 sm:col-span-2">
+                        <b><?php echo $user->voornaam; ?></b>
+                    </dd>
+                </div>
+                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 hover:bg-gray-200">
+                    <dt class="text-sm leading-5 font-medium text-black-500">
+                    Tussenvoegel
+                    </dt>
+                    <dd class="mt-1 text-sm leading-5 text-gray-500 sm:mt-0 sm:col-span-2">
+                        <b><?php echo $user->tussenvoegsel; ?></b>
+                    </dd>
+                </div>
+                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 hover:bg-gray-200">
+                    <dt class="text-sm leading-5 font-medium text-black-500">
+                    Achternaam
+                    </dt>
+                    <dd class="mt-1 text-sm leading-5 text-gray-500 sm:mt-0 sm:col-span-2">
+                        <b><?php echo $user->achternaam; ?></b>
+                    </dd>
+                </div>
+                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 hover:bg-gray-200">
+                    <dt class="text-sm leading-5 font-medium text-black-500">
+                    Email
+                    </dt>
+                    <dd class="mt-1 text-sm leading-5 text-gray-500 sm:mt-0 sm:col-span-2">
+                        <b><?php echo $user->email; ?></b>
+                    </dd>
+                </div>
+                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 hover:bg-gray-200">
+                    <dt class="text-sm leading-5 font-medium text-black-500">
+                    Gebruikersnaam
+                    </dt>
+                    <dd class="mt-1 text-sm leading-5 text-gray-500 sm:mt-0 sm:col-span-2">
+                        <b><?php echo $user->gebruikersnaam; ?></b>
+                    </dd>
+                </div>
+                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 hover:bg-gray-200">
+                    <dt class="text-sm leading-5 font-medium text-black-500">
+                    Rol
+                    </dt>
+                    <dd class="mt-1 text-sm leading-5 text-gray-500 sm:mt-0 sm:col-span-2">
+                        <b><?php echo $user->type; ?></b>
+                    </dd>
+                </div>
+                </dl>
+            </div>
+            </div>
+            <br>
+            <center>
+                <a href="overzicht.php" class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded">Terug</a>
+            </center>
         </div>
     </div>
+  </main>
 </body>
 </html>

@@ -1,0 +1,16 @@
+{
+  "name": "project1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "tailwindcss": "^1.9.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "build:css": "tailwind build assets/styles/src/style.css -o assets/styles/src/tailwind/style.css"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

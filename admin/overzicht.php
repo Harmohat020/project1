@@ -27,10 +27,10 @@ if (isset($_SESSION['username']) AND $type === 'Admin'){
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.4/css/buttons.dataTables.min.css">
     <link rel="stylesheet" href="..\assets\styles\admin\style.css">
     <style>
-        body {
-            min-height: 75rem;
-            padding-top: 4.5rem;
-        }
+    body {
+        min-height: 75rem;
+        padding-top: 4.5rem;
+    }
     </style>
 </head>
 <body>
@@ -92,24 +92,22 @@ if (isset($_SESSION['username']) AND $type === 'Admin'){
                     <td><?php echo $user['email'];?></td> 
                     <td><?php echo $user['gebruikersnaam'];?></td> 
                     <td><?php echo $user['type'];?></td>
-                    <form action="overzicht.php"  method="POST">  
-                        <td class="noExl">
-                            <a class="btn btn-secondary mr-2 btn-sm" href="show.php?id=<?php echo $userID; ?>">Toon</a>
-                        </td>
-                        <td class="noExl">
-                            <a class="btn btn-primary mr-2 btn-sm" href="edit.php?id=<?php echo $userID; ?>">Edit</a>
-                        </td>      
-                        <td class="noExl">
-                            <input class="btn btn-danger btn-sm" type="submit" value="Verwijderen">
-                        </td> 
-                    </form>
+                    <td class="noExl">
+                        <a class="btn btn-secondary mr-2 btn-sm" href="show.php?id=<?php echo $userID; ?>">Toon</a>
+                    </td>
+                    <td class="noExl">
+                        <a class="btn btn-primary mr-2 btn-sm" href="edit.php?id=<?php echo $userID; ?>">Edit</a>
+                    </td>      
+                    <td class="noExl">
+                        <a class="btn btn-danger mr-2 btn-sm" href="delete.php?id=<?php echo $userID; ?>">Verwijder</a>
+                    </td> 
                 </tr> 
                 <?php endforeach; ?>
             </tbody>
         </table>
         <button id="csv-file-exp" class="noExl btn btn-outline-success">export as excel</button>
     </main>
-
+                    
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>

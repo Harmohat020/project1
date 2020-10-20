@@ -11,25 +11,51 @@ if (isset($_SESSION['username']) AND $type === 'Admin'){
     header("Location: ..\index.php");
 }
 
-/* Checking if the form is succesfully submitted */
-if (isset($_POST['register_form'])){
-    $voornaam = ucwords($_POST['fname']);
-    $tussenvoegsel = $_POST['tussenvoegsel'];
-    $achternaam = ucwords($_POST['lname']);
-    $gebruikersnaam = $_POST['username'];
-    $email = $_POST['email'];
-    $pwd = $_POST['pwd'];
-    $pwd_repeat = $_POST['repeat-pwd'];
-    $type = $_POST['type'];
+ /* Checking if the form is succesfully submitted */
+ if (isset($_POST['register_form'])){
+    /* Putting the fieldnames from the form in the array*/
+    $fieldnames = array('fname', 'lname', 'username', 'email', 'pwd', 'repeat-pwd');
 
-    $admin = new DB("localhost","root","","project1","utf8mb4");
-    
-    /* If password and repeat password are the same, data will be sended to the database */
-    if ($pwd === $pwd_repeat) {
-        $admin->create_person_admin($voornaam, $tussenvoegsel, $achternaam, $email, $pwd, $gebruikersnaam, $type);
-    }else {
-      echo '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'.'Password is not the same' .'</div>';
+    $error = false;
+    /* Looping the fieldnames in the $_POST[] */
+    foreach ($fieldnames as $data) {
+        if(empty($_POST[$data])){
+            $error = true;
+        }    
+    }
+    /* If a fieldname is empty error message will be shown */
+    if ($error) {  
+          echo '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'.'All fields are required' .'</div>'; 
+          
+          error_log('X - Add User Failed: username: '.$username.' - '. 'Admin: '. $_SESSION['username'].date("h:i:sa").' ['.$ip_address."]\n", 3, 'logs/admin/log_'.date("d-m-Y").'.log');
+
+    }
+    /*If there is not a error, data will be inserted in the database */
+    else {
+      $persoon = new DB('localhost','root','','project1','utf8mb4');
+
+      $voornaam = ucwords($_POST['fname']);
+      $tussenvoegsel = $_POST['tussenvoegsel'];
+      $achternaam = ucwords($_POST['lname']);
+      $username = $_POST['username'];
+      $email = $_POST['email'];
+      $pwd = $_POST['pwd'];
+      $pwd_repeat = $_POST['repeat-pwd'];
+      
+          /* If password is not the same error will be shown */
+          if ($pwd != $pwd_repeat) {
+              echo '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'.'Password is not the same' .'</div>';
+
+              error_log('X - Add User Failed: username: '.$username.' - '. 'Admin: '. $_SESSION['username'].date("h:i:sa").' ['.$ip_address."]\n", 3, 'logs/admin/log_'.date("d-m-Y").'.log');
+
+          }else{
+              $persoon->register_insert($voornaam, $tussenvoegsel, $achternaam, $email, $pwd, $username);
+
+              error_log('X - Add User Success: username: '.$username.' - '. 'Admin: '. $_SESSION['username'].date("h:i:sa").' ['.$ip_address."]\n", 3, 'logs/admin/log_'.date("d-m-Y").'.log');
+          }
+
     } 
+    
 }
 ?>
 <!DOCTYPE html>
@@ -84,46 +110,46 @@ if (isset($_POST['register_form'])){
         <form class="form form-register" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
             <div class="form-row">
                 <div class="col">
-                    <input type="text" required class="form-control" name="fname"   maxlength="60" placeholder="Voornaam">
+                    <input type="text" class="form-control" name="fname"   maxlength="60" placeholder="Voornaam" required/>
                 </div>
                 <div class="col">
-                    <input type="text" required class="form-control" name="tussenvoegsel"  maxlength="60" placeholder="Tussenvoegsel">
+                    <input type="text" class="form-control" name="tussenvoegsel"  maxlength="60" placeholder="Tussenvoegsel"/>
                 </div>
                 <div class="col">
-                    <input type="text" required class="form-control" name="lname" maxlength="60" placeholder="Achternaam">
+                    <input type="text" class="form-control" name="lname" maxlength="60" placeholder="Achternaam" required/>
                 </div>
                 <div class="col">
-                    <input type="number" required class="form-control" name="type"  placeholder="Functie">
+                    <input type="number" class="form-control" name="type" min="1" max="4" placeholder="Functie" required/>
                 </div>
             </div>
             <br>
             <div class="form-row">
                 <div class="col">
-                    <input type="email" required class="form-control" name="email"   maxlength="60" placeholder="email">
+                    <input type="email" class="form-control" name="email"   maxlength="60" placeholder="email" required/>
                 </div>
                 <div class="col">
-                    <input type="text" required class="form-control" name="username"  maxlength="60" placeholder="Gebruikersnaam">
+                    <input type="text" class="form-control" name="username"  maxlength="60" placeholder="Gebruikersnaam" required/>
                 </div>
                 <div class="col">
-                    <input type="password" required class="form-control" name="pwd" maxlength="60" placeholder="Wachtwoord">
+                    <input type="password" class="form-control" name="pwd" maxlength="60" placeholder="Wachtwoord" required/>
                 </div>
                 <div class="col">
-                    <input type="password" required class="form-control" name="repeat-pwd" maxlength="60" placeholder="Herhaal Wachtwoord">
+                    <input type="password" class="form-control" name="repeat-pwd" maxlength="60" placeholder="Herhaal Wachtwoord" required/>
                 </div>
             </div>
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                        <input type="submit" class="btn btn-primary mt-3" name="register_form" value="Toevoegen"/>
+                    <input type="submit" class="btn btn-primary mt-3" name="register_form" value="Toevoegen"/>
                 </div>
             </div>
         </form>  
         <hr>
         <h3>Nummer toevoegen bij Functie:</h3>
         <ul>
-         <li>1: Admin</li>     
-         <li>2: Docent</li>  
-         <li>3: Student</li>  
-         <li>4: User</li>     
+            <li>1: Admin</li>     
+            <li>2: Docent</li>  
+            <li>3: Student</li>  
+            <li>4: User</li>     
         </ul>  
     </main>
 

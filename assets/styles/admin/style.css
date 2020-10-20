@@ -9,4 +9,14 @@ table#overzicht tr:hover {
 .welcome-msg {
   text-align: center;
 }
+
+.dt-buttons {
+  float: none;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
 /*# sourceMappingURL=style.css.map */

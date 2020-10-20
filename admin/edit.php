@@ -26,22 +26,19 @@ if (isset($_SESSION['username']) AND $type === 'Admin'){
             }
             /* If a fieldname is empty error message will be shown */
             if ($error) {  
-                    echo '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'.'All fields are required' .'</div>'; 
-                    
-                    error_log('X - Registration Failed: username: '.$username.' '.date("h:i:sa").' ['.$ip_address."]\n", 3, 'logs/register/log_'.date("d-m-Y").'.log');
-
+                echo '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'.'All fields are required' .'</div>'; 
             } 
             else{
+                $user = new DB('localhost','root','','project1','utf8mb4');  
+                
                 $voornaam = ucwords($_POST['voornaam']);
                 $tussenvoegsel = $_POST['tussenvoegsel'];
                 $achternaam = ucwords($_POST['achternaam']);
                 $email = $_POST['email'];
                 $username = $_POST['gebruikersnaam'];
                 $typeID = $_POST['type'];
-
-                $user = new DB('localhost','root','','project1','utf8mb4');                 
-                    
-                $user->edit($voornaam, $tussenvoegsel, $achternaam, $email, $username, $typeID, $_GET['id']);
+                
+                $user->edit($voornaam, $tussenvoegsel, $achternaam, $email, $username, $typeID);
             }
         
         }
@@ -59,7 +56,6 @@ if (isset($_SESSION['username']) AND $type === 'Admin'){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <style>
         body {
@@ -102,7 +98,7 @@ if (isset($_SESSION['username']) AND $type === 'Admin'){
     </nav>
 
     <main role="main" class="container">
-        <form action="overzicht.php" method="POST">
+        <form action="" method="POST">
             <div class="form-row">
                 <div class="col">
                     <input type="text" class="form-control" name="voornaam" value="<?php echo $user->voornaam;?>" maxlength="60" placeholder="Voornaam" required/>
@@ -123,7 +119,7 @@ if (isset($_SESSION['username']) AND $type === 'Admin'){
                     <input type="text" class="form-control" name="gebruikersnaam" value="<?php echo $user->gebruikersnaam;?>"  maxlength="60" placeholder="Gebruikersnaam" required/>
                 </div>
                 <div class="col">
-                    <input type="number" class="form-control" name="type" value="<?php echo $user->typeID;?>" maxlength="60" placeholder="Functie" required/>
+                    <input type="number" class="form-control" name="type" value="<?php echo $user->typeID;?>" min="1" max="4" maxlength="60" placeholder="Functie" required/>
                 </div>
             </div>
 
@@ -134,6 +130,14 @@ if (isset($_SESSION['username']) AND $type === 'Admin'){
                 </div>
             </div>
         </form>
+        <hr>
+        <h3>Nummer toevoegen bij Functie:</h3>
+        <ul>
+            <li>1: Admin</li>     
+            <li>2: Docent</li>  
+            <li>3: Student</li>  
+            <li>4: User</li>     
+        </ul> 
     </main>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
